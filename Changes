@@ -1,0 +1,46 @@
+Revision history for Perl extension Lingua::Any::Numbers.
+
+Time zone is GMT+2.
+
+0.25 Tue Feb  3 01:54:04 2009
+   => Added support for:
+         o Lingua::CS::Num2Word
+         o Lingua::DE::Num2Word
+         o Lingua::ES::Numeros
+         o Lingua::ID::Nums2Words
+         o Lingua::NO::Num2Word
+         o Lingua::PT::Nums2Word
+         o Lingua::SV::Num2Word
+   => Updated Pod.
+
+0.24 Mon Jan 12 21:16:22 2009
+   => Added support for Lingua::(Slavic|BG)::Numbers
+   => Re-structured some parts.
+
+0.23 Tue Jul  8 10:55:46 2008
+   => If the language from the locale is not supported, warn & fall back to the
+      default instead of die()ing.
+
+0.22 Mon Jul  7 23:38:41 2008
+   => Note to self: also test Makefile.PL when changed :p
+
+0.21 Mon Jul  7 21:49:28 2008
+   => Implemented locale support (global & parameter)
+          per request from Ted Zlatanov.
+   => Refactored functions.
+
+0.20 Wed Sep 12 00:24:28 2007
+   => Fixed _dummy_oo(). Error reported by brian d foy.
+   => Improved unit tests.
+   => Added option to auto-skip language drivers if they want
+      a newer perl binary.
+   => Added a new macro named SILENT.
+
+0.12 Tue Aug 14 23:11:32 2007
+   => Forgot to remove debugging code.
+
+0.11 Tue Aug 14 23:06:11 2007
+   => Fixed a typo in build tools.
+
+0.10 Sun Aug 12 00:51:53 2007
+   => First release.

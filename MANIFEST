@@ -1,0 +1,14 @@
+lib/Lingua/Any/Numbers.pm
+t/01-pod.t
+t/02-pod-coverage.t
+t/03-basic.t
+t/04-locale.t
+eg/numbers.pl
+eg/numbers.pl.example.output.txt
+Makefile.PL
+Build.PL
+Changes
+MANIFEST
+README
+META.yml
+PREREQ
