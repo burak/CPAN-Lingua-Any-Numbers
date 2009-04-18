@@ -2,6 +2,10 @@ Revision history for Perl extension Lingua::Any::Numbers.
 
 Time zone is GMT+2.
 
+0.26 Sat Apr 18 06:01:25 2009
+   => Mention Task::Lingua::Any::Numbers
+   => Update distro tools.
+
 0.25 Tue Feb  3 01:54:04 2009
    => Added support for:
          o Lingua::CS::Num2Word

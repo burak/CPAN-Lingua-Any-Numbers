@@ -15,8 +15,6 @@ use constant MONTHS => qw(
    January February March     April   May      June
    July    August   September October November December
 );
-use constant MONOLITH_TEST_FAIL =>
-   "\nFAILED! Building the monolithic version failed during unit testing\n\n";
 
 $VERSION = '0.40';
 

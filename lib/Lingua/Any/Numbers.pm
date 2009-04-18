@@ -2,7 +2,7 @@ package Lingua::Any::Numbers;
 use strict;
 use vars qw( $VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS );
 
-$VERSION = '0.25';
+$VERSION = '0.26';
 
 use subs qw(
    to_string
@@ -305,6 +305,9 @@ number itself is returned instead of dying. It is also possible to
 take advantage of the automatic locale detection if you install all the
 supported modules listed in the L</SEE ALSO> section.
 
+L<Task::Lingua::Any::Numbers> can be installed to get all the available modules
+related to L<Lingua::Any::Numbers> on CPAN.
+
 =head1 IMPORT PARAMETERS
 
 All functions and aliases can be imported individually, 
@@ -440,6 +443,8 @@ modules manually.
    Lingua::NO::Num2Word
    Lingua::PT::Nums2Word
    Lingua::SV::Num2Word
+
+You can just install L<Task::Lingua::Any::Numbers> to get all modules above.
 
 =head2 BOGUS MODULES
 

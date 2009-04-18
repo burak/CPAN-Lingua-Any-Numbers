@@ -1,30 +1,22 @@
 #!/usr/bin/perl -w
 use strict;
-use vars qw(%PREREQ %RECOMMEND);
+use vars qw(%PREREQ %RECOMMEND %BUILDREQ );
 
 %PREREQ = (
     'Lingua::EN::Numbers' => 0,
-    'Test::More'          => '0.40',
     'I18N::LangTags'      => '0.35',
 );
 
 %RECOMMEND = (
-    'Lingua::AF::Numbers' => 0,
-    'Lingua::EU::Numbers' => 0,
-    'Lingua::FR::Numbers' => 0,
-    'Lingua::HU::Numbers' => 0,
-    'Lingua::IT::Numbers' => 0,
-    'Lingua::JA::Numbers' => 0,
-    'Lingua::NL::Numbers' => 0,
-    'Lingua::PL::Numbers' => 0,
-    'Lingua::TR::Numbers' => 0,
-    'Lingua::ZH::Numbers' => 0,
+    'Task::Lingua::Any::Numbers' => '0.12',
+);
+
+%BUILDREQ = (
+    'Test::More' => '0.40',
 );
 
 if ( $^O =~ m{MSWin}i ) {
-   $PREREQ{'Win32::Locale'} = 0;
+    $PREREQ{'Win32::Locale'} = 0;
 }
 
 1;
-
-__END__
