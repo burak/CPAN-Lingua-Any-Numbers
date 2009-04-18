@@ -8,7 +8,7 @@ use vars qw(%PREREQ %RECOMMEND %BUILDREQ );
 );
 
 %RECOMMEND = (
-    'Task::Lingua::Any::Numbers' => '0.12',
+    'Task::Lingua::Any::Numbers' => '0.11',
 );
 
 %BUILDREQ = (
