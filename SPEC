@@ -1,7 +1,7 @@
 {
     module_name    => 'Lingua::Any::Numbers',
     requires   => {
-        'Lingua::EN::Numbers' = > 0,
+        'Lingua::EN::Numbers' => 0,
     },
     meta_merge => {
         resources => {
