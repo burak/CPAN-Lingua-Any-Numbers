@@ -2,7 +2,7 @@ package Lingua::Any::Numbers;
 use strict;
 use vars qw( $VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS );
 
-$VERSION = '0.27';
+$VERSION = '0.28';
 
 use subs qw(
    to_string

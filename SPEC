@@ -1,5 +1,8 @@
 {
     module_name    => 'Lingua::Any::Numbers',
+    requires   => {
+        'Lingua::EN::Numbers' = > 0,
+    },
     meta_merge => {
         resources => {
             repository => 'http://bitbucket.org/burak/cpan-lingua-any-numbers/',
