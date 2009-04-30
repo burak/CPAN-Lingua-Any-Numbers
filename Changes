@@ -2,6 +2,9 @@ Revision history for Perl extension Lingua::Any::Numbers.
 
 Time zone is GMT+2.
 
+0.29 Thu Apr 30 16:59:29 2009
+   => Get rid of version checking test.
+
 0.28 Thu Apr 30 15:18:09 2009
    => Ooops! Forgot to add Lingua::EN::Numbers prereq after converting the distro.
 
