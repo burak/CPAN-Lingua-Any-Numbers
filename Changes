@@ -2,6 +2,9 @@ Revision history for Perl extension Lingua::Any::Numbers.
 
 Time zone is GMT+2.
 
+0.31 Tue Jun  2 03:59:10 2009
+   => Cleanup.
+
 0.30 Mon May  4 03:20:01 2009
    => Add PREREQ: I18N::LangTags::Detect.
 

@@ -2,7 +2,7 @@ package Lingua::Any::Numbers;
 use strict;
 use vars qw( $VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS );
 
-$VERSION = '0.30';
+$VERSION = '0.31';
 
 use subs qw(
    to_string
@@ -234,10 +234,10 @@ sub _test_cardinal {
       : $s{"nums2words"}       ? \&{"${c}::nums2words"        }
       : $s{"num2word"}         ? \&{"${c}::num2word"          }
       : $s{cardinal2alpha}     ? \&{"${c}::cardinal2alpha"    }
-      : $s{cardinal}&&$n       ? _dummy_oo( $c, 'cardinal' )
+      : $s{cardinal} && $n     ? _dummy_oo( $c, 'cardinal' )
       : $s{parse}              ? _dummy_oo( $c )
-      : $s{"num2${l}_cardinal"}? $n ? _dummy_oo($c, "num2${l}_cardinal")
-                                    : \&{"${c}::num2${l}_cardinal" }
+      : $s{"num2${l}_cardinal"}? $n ? _dummy_oo( $c, "num2${l}_cardinal" )
+                                    :       \&{"${c}::num2${l}_cardinal" }
       :                          \&_dummy_string
       ;
 }
@@ -245,17 +245,16 @@ sub _test_cardinal {
 sub _test_ordinal {
    no strict qw(refs);
    my($c, $l) = @_;
-   my %s = %{ "${c}::" };
-   my $n = $s{new};
+   my %s      = %{ "${c}::" };
+   my $n      = $s{new} && ! _like_en( $c );
    return
-        $s{"ordinate_to_${l}"}         ? \&{"${c}::ordinate_to_${l}"}
-      : $s{ordinal2alpha}              ? \&{"${c}::ordinal2alpha"   }
-      : $s{ordinal}&&$n&&!_like_en($c) ? _dummy_oo( $c, 'ordinal')
-      : $s{"num2${l}_ordinal"}         ? ($n && ! _like_en($c))
-                                          ? _dummy_oo( $c, "num2${l}_ordinal" )
-                                          : \&{"${c}::num2${l}_ordinal"}
-      :                                \&_dummy_ordinal
-      ;
+     $s{"ordinate_to_${l}"}   ? \&{"${c}::ordinate_to_${l}"}
+   : $s{ordinal2alpha}        ? \&{"${c}::ordinal2alpha"   }
+   : $s{ordinal} && $n        ? _dummy_oo( $c, 'ordinal' )
+   : $s{"num2${l}_ordinal"}   ? $n ? _dummy_oo( $c, "num2${l}_ordinal" )
+                                   :      \&{ "${c}::num2${l}_ordinal" }
+   :                          \&_dummy_ordinal
+   ;
 }
 
 sub _like_en {
