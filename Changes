@@ -2,6 +2,9 @@ Revision history for Perl extension Lingua::Any::Numbers.
 
 Time zone is GMT+2.
 
+0.32 Wed Sep 23 20:38:19 2009
+   => Perl::Critic fixes.
+
 0.31 Tue Jun  2 03:59:10 2009
    => Cleanup.
 

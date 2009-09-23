@@ -2,12 +2,15 @@
 # CAVEAT EMPTOR: This file is UTF8 encoded (BOM-less)
 # Burak Gürsoy <burak[at]cpan[dot]org>
 use strict;
+use warnings;
 use vars qw( $HIRES $BENCH $BENCH2 );
+use Carp qw(croak);
+use constant LEGACY_PERL => $] < 5.006;
 
 BEGIN {
-   if ( $] < 5.006 ) {
+   if ( LEGACY_PERL ) {
       # The dark side of the Force is a pathway to many abilities ...
-      eval q{
+      my $ok = eval <<'LEGACY_INC_TRICK';
          package utf8;
          package warnings;
          package bytes;
@@ -15,12 +18,12 @@ BEGIN {
          $INC{"warnings.pm"} =
          $INC{"bytes.pm"}    =
          1;
-      };
-      die $@ if $@; # ... some consider to be unnatural
+LEGACY_INC_TRICK
+      croak $@ if $@; # ... some consider to be unnatural
    }
    TRY_TO_LOAD_TIME_HIRES: {
       local $@;
-      eval {
+      my $ok = eval {
          require Time::HiRes;
          Time::HiRes->import('time');
          $HIRES = 1;
@@ -34,7 +37,7 @@ use Test::More qw( no_plan );
 
 BEGIN {
    diag("This is perl $] running under $^O");
-   diag("Test started @ " . scalar( localtime time ) );
+   diag('Test started @ ' . scalar localtime time );
    $BENCH = time;
    use_ok( 'Lingua::Any::Numbers',':std' );
 }
@@ -81,22 +84,22 @@ foreach my $id ( sort { $a cmp $b } available ) {
    ok( $ordinal = to_ordinal( TESTNUM, $id ), "We got an ordinal from $id" );
 
    is_str($string)
-   ?     is($string,       $ts, qq{STRING($id => '$string' eq '$ts')} )
-   : cmp_ok($string, '==', $ts, qq{STRING($id => '$string' == '$ts')} )
+   ?     is($string,         $ts, qq{STRING($id => '$string' eq '$ts')} )
+   : cmp_ok($string, q{==},  $ts, qq{STRING($id => '$string' == '$ts')} )
    ;
-   
+
    is_str($ordinal)
-   ?     is($ordinal,       $to, qq{ORDINAL($id => '$ordinal' eq '$to')} )
-   : cmp_ok($ordinal, '==', $to, qq{ORDINAL($id => '$ordinal' == '$to')} )
+   ?     is($ordinal,        $to, qq{ORDINAL($id => '$ordinal' eq '$to')} )
+   : cmp_ok($ordinal, q{==}, $to, qq{ORDINAL($id => '$ordinal' == '$to')} )
    ;
 }
 
 if ( $HIRES ) {
-   diag( sprintf "All tests took %.4f seconds to complete"   , time - $BENCH  );
-   diag( sprintf "Normal tests took %.4f seconds to complete", time - $BENCH2 );
+   diag( sprintf 'All tests took %.4f seconds to complete'   , time - $BENCH  );
+   diag( sprintf 'Normal tests took %.4f seconds to complete', time - $BENCH2 );
 }
 
-sub is_str { $_[0] ne TESTNUM }
+sub is_str { return shift ne TESTNUM }
 
 __END__
 
