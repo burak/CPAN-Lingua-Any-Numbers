@@ -2,6 +2,11 @@ Revision history for Perl extension Lingua::Any::Numbers.
 
 Time zone is GMT+2.
 
+0.40 Wed Oct  6 00:16:27 2010
+   => Unit test fix for Lingua::SV::Numbers.
+   => New function to get the language handler class.
+   => Add Lingua::BG::Numbers to tests.
+
 0.32 Wed Sep 23 20:38:19 2009
    => Perl::Critic fixes.
 

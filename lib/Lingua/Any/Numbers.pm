@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS );
 
-$VERSION = '0.31';
+$VERSION = '0.40';
 
 use subs qw(
    to_string
@@ -51,6 +51,7 @@ BEGIN {
       to_string  number_to_string  num2str
       to_ordinal number_to_ordinal num2ord
       available  available_langs   available_languages
+      language_handler
    );
 }
 
@@ -94,6 +95,12 @@ sub to_ordinal {
 
 sub available {
    return keys %LMAP;
+}
+
+sub language_handler {
+   my $lang = shift             || return;
+   my $h    = $LMAP{ uc $lang } || return;
+   return $h->{class};
 }
 
 # -- PRIVATE -- #
@@ -194,7 +201,7 @@ sub _probe_inc {
       my $DIRH = Symbol::gensym();
       opendir $DIRH, $path or croak "opendir($path): $!";
       while ( my $dir = readdir $DIRH ) {
-         next if $dir =~ m{ \A \. }xms || $dir eq 'Any' || $dir eq 'Slavic';
+         next if $dir =~ m{ \A [.] }xms || $dir eq 'Any' || $dir eq 'Slavic';
          my($file, $type) = _probe_exists($path, $dir);
          next if ! $file; # bogus
          push @classes, [ join(q{::}, 'Lingua', $dir, $type), $file, $dir ];
@@ -236,6 +243,7 @@ sub _compile {
       $LMAP{ uc $e->[LID] } = {
          string  => _test_cardinal($c, $l),
          ordinal => _test_ordinal( $c, $l),
+         class   => $c,
       };
    }
    #use Data::Dumper;my $d = Data::Dumper->new([\%LMAP]);$d->Deparse(1);warn "DD:". $d->Dump;
@@ -405,6 +413,15 @@ Aliases:
 =item available_languages
 
 =back
+
+=head2 language_handler
+
+Returns the name of the language handler class if you pass a language id and
+a class for that language id is loaded. Returns undef otherwise.
+
+This function can not be imported. Use a fully qualified name to call:
+
+   my $sv = language_handler('SV');
 
 =head1 DEBUGGING
 
