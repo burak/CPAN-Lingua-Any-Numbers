@@ -20,8 +20,6 @@ use subs qw(
 );
 
 use constant LCLASS         => 0;
-use constant LFILE          => 1;
-use constant LID            => 2;
 
 use constant PREHISTORIC    =>  $] < 5.006;
 use constant LEGACY         => ($] < 5.008) && ! PREHISTORIC;
@@ -187,9 +185,6 @@ sub _probe_error {
    return croak("An error occurred while including sub modules: $e");
 }
 
-# XXX Test Lingua::FR::Nums2Words
-# Maybe add a mechanish to select "Numbers" if there are many for the $ID
-
 # XXX Support Lingua::PT::Nums2Ords
 
 sub _probe_inc {
@@ -202,23 +197,28 @@ sub _probe_inc {
       opendir $DIRH, $path or croak "opendir($path): $!";
       while ( my $dir = readdir $DIRH ) {
          next if $dir =~ m{ \A [.] }xms || $dir eq 'Any' || $dir eq 'Slavic';
-         my($file, $type) = _probe_exists($path, $dir);
-         next if ! $file; # bogus
-         push @classes, [ join(q{::}, 'Lingua', $dir, $type), $file, $dir ];
+         my @rs = _probe_exists($path, $dir);
+         next if ! @rs; # bogus
+         foreach my $e ( @rs ) {
+            my($file, $type) = @{ $e };
+            push @classes, [ join(q{::}, 'Lingua', $dir, $type), $file, $dir ];
+         }
       }
       closedir $DIRH;
    }
+
    return @classes;
 }
 
 sub _probe_exists {
    my($path, $dir) = @_;
-   foreach my $possibility ( qw[ Numbers Num2Word Nums2Words Numeros ] ) {
+   my @results;
+   foreach my $possibility ( qw[ Numbers Num2Word Nums2Words Numeros Nums2Ords ] ) {
       my $file = File::Spec->catfile( $path, $dir, $possibility . '.pm' );
       next if ! -e $file || -d _;
-      return $file, $possibility;
+      push @results, [ $file, $possibility ];
    }
-   return;
+   return @results;
 }
 
 sub _w {
@@ -233,25 +233,74 @@ sub _eprobe {
    return sprintf $tmp, @args;
 }
 
-# IT::Numbers OO içinde ordinal sağlıyor
+sub _merge_into_numbers {
+   my($id, $lang ) = @_;
+   my $e       = delete $lang->{ $id };
+   my %test    = map { @{ $_ } } @{ $e };
+   my $words   = delete $test{'Lingua::' . $id . '::Nums2Words' };
+   my $ords    = delete $test{'Lingua::' . $id . '::Nums2Ords' };
+   my $numbers = delete $test{'Lingua::' . $id . '::Numbers' };
+   if ( ! $numbers && ( $ords || $words ) ) {
+      my $file  = sprintf 'Lingua/%s/Numbers.pm', $id;
+      my $c     = sprintf 'Lingua::%s::Numbers', $id;
+      $INC{ $file } ||= 1;
+      my $n     = $c . '::num2' . lc $id;
+      my $v     = $c . '::VERSION';
+      my $o     = $n . '_ordinal';
+      my $card  = 'Lingua::' . $id . '::Nums2Words::num2word';
+      my $ord   = 'Lingua::' . $id . '::Nums2Ords::num2ord';
+      $lang->{ $id } = [ $c, $INC{ $file } ];
+
+      no strict qw( refs );
+      *{ $n } =   \&{ $card    } if $words && ! $c->can('num2tr');
+      *{ $o } =   \&{ $ord     } if $ords  && ! $c->can('num2ord');
+      *{ $v } = sub { $VERSION } if           ! $c->can('VERSION');
+      use strict;
+      return;
+   }
+   $lang->{ $id } = $e; # restore
+   return;
+}
 
 sub _compile {
    my $classes = shift;
+   my %lang;
    foreach my $e ( @{ $classes } ) {
-      my $l = lc $e->[LID];
-      my $c = $e->[LCLASS];
-      $LMAP{ uc $e->[LID] } = {
+      my($class, $file, $id) = @{ $e };
+      $lang{ $id } = [] if ! defined $lang{ $id };
+      push @{ $lang{ $id } }, [ $class, $file ];
+   }
+
+   foreach my $id ( keys %lang ) {
+      if ( $id eq 'PT' ) {
+         _merge_into_numbers( $id, \%lang );
+         next;
+      }
+      my @choices = @{ $lang{ $id } };
+      my $numbers;
+      foreach my $c ( @choices ) {
+         my($class, $file) = @{ $c };
+         $numbers = $c if $class =~ m{::Numbers\z}xms;
+      }
+      $lang{ $id } = $numbers ? [ @{ $numbers} ] : shift @choices;
+   }
+
+   foreach my $l ( keys %lang ) {
+      my $e = $lang{ $l };
+      my $c = $e->[0];
+      $LMAP{ uc $l } = {
          string  => _test_cardinal($c, $l),
          ordinal => _test_ordinal( $c, $l),
          class   => $c,
       };
    }
-   #use Data::Dumper;my $d = Data::Dumper->new([\%LMAP]);$d->Deparse(1);warn "DD:". $d->Dump;
+
    return;
 }
 
 sub _test_cardinal {
    my($c, $l) = @_;
+   $l = lc $l;
    no strict qw(refs);
    my %s = %{ "${c}::" };
    my $n = $s{new};
@@ -271,6 +320,7 @@ sub _test_cardinal {
 
 sub _test_ordinal {
    my($c, $l) = @_;
+   $l = lc $l;
    no strict qw(refs);
    my %s = %{ "${c}::" };
    my $n = $s{new} && ! _like_en( $c );
@@ -468,6 +518,7 @@ modules manually.
    Lingua::JA::Numbers
    Lingua::NL::Numbers
    Lingua::PL::Numbers
+   Lingua::SV::Numbers
    Lingua::TR::Numbers
    Lingua::ZH::Numbers
    
@@ -477,7 +528,6 @@ modules manually.
    Lingua::ID::Nums2Words
    Lingua::NO::Num2Word
    Lingua::PT::Nums2Word
-   Lingua::SV::Num2Word
 
 You can just install L<Task::Lingua::Any::Numbers> to get all modules above.
 

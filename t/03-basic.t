@@ -9,17 +9,8 @@ use constant LEGACY_PERL => $] < 5.006;
 
 BEGIN {
    if ( LEGACY_PERL ) {
-      # The dark side of the Force is a pathway to many abilities ...
-      my $ok = eval <<'LEGACY_INC_TRICK';
-         package utf8;
-         package warnings;
-         package bytes;
-         $INC{"utf8.pm"}     =
-         $INC{"warnings.pm"} =
-         $INC{"bytes.pm"}    =
-         1;
-LEGACY_INC_TRICK
-      croak $@ if $@; # ... some consider to be unnatural
+      my @mods = qw( utf8.pm warnings.pm bytes.pm );
+      @INC{ @mods } = ( (1)x @mods );
    }
    TRY_TO_LOAD_TIME_HIRES: {
       local $@;
@@ -60,15 +51,22 @@ my %LANG = (
    NL => { string => 'vijfenveertig'     , ordinal => '45'                    },
    NO => { string => 'førti fem'         , ordinal => '45'                    },
    PL => { string => 'czterdzieci piêæ ' , ordinal => '45'                    },
-   PT => { string => 'quarenta e cinco'  , ordinal => '45'                    },
+   PT => { string => 'quarenta e cinco'  , ordinal => 'quadragésimo quinto'   },
    SV => { string => 'fyrtiofem'         , ordinal => 'fyrtiofemte'           },
    TR => { string => 'kırk beş'          , ordinal => 'kırk beşinci'          },
    ZH => { string => 'SiShi Wu'          , ordinal => '45'                    },
 );
 
 my $sv = language_handler( 'SV' );
+my $fr = language_handler( 'FR' );
+
 if ( $sv && ! $sv->isa('Lingua::SV::Numbers') ) {
    $LANG{SV}->{ordinal} = '45'; # Lingua::SV::Num2Word lacks this
+}
+
+if ( $fr && $fr->isa('Lingua::FR::Nums2Words') ) {
+   $LANG{FR}->{string}  =~ s{\-}{ }xmsg;
+   $LANG{FR}->{ordinal} = '45'; # Lingua::FR::Nums2Words lacks this
 }
 
 foreach my $id ( sort { $a cmp $b } available() ) {
@@ -78,7 +76,13 @@ foreach my $id ( sort { $a cmp $b } available() ) {
    }
 
    my $class = language_handler( $id );
-   my $v     = $class->VERSION || '<undef>';
+
+   if ( ! $class ) {
+      diag("Strange. No handler for $id loaded.");
+      next;
+   }
+
+   my $v = $class->VERSION || '<undef>';
    diag( "$class v$v loaded ok" );
 
    run_tests( $id );
@@ -100,7 +104,7 @@ sub run_tests {
    ok( my $string  = to_string(  TESTNUM, $id ), "We got a string from $id" );
    ok( my $ordinal = to_ordinal( TESTNUM, $id ), "We got an ordinal from $id" );
 
-   is_str($string)  ?     is($string,         $ts, qq{STRING($id) eq}  )
+   is_str($string)  ?     is($string,         $ts, qq{STRING($id) eq $string -- $ts}  )
                     : cmp_ok($string, q{==},  $ts, qq{STRING($id) ==}  );
 
    is_str($ordinal) ?     is($ordinal,        $to, qq{ORDINAL($id) eq} )
