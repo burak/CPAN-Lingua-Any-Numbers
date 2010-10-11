@@ -185,8 +185,6 @@ sub _probe_error {
    return croak("An error occurred while including sub modules: $e");
 }
 
-# XXX Support Lingua::PT::Nums2Ords
-
 sub _probe_inc {
    require Symbol;
    my @classes;
