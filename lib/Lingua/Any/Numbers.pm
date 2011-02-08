@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS );
 
-$VERSION = '0.40';
+$VERSION = '0.41';
 
 use subs qw(
    to_string
@@ -241,10 +241,11 @@ sub _merge_into_numbers {
    if ( ! $numbers && ( $ords || $words ) ) {
       my $file  = sprintf 'Lingua/%s/Numbers.pm', $id;
       my $c     = sprintf 'Lingua::%s::Numbers', $id;
-      $INC{ $file } ||= 1;
+      $INC{ $file } ||= 'Fake placeholder module';
       my $n     = $c . '::num2' . lc $id;
       my $v     = $c . '::VERSION';
       my $o     = $n . '_ordinal';
+      my $f     = $c . '::_faked_by_lingua_any_numbers';
       my $card  = 'Lingua::' . $id . '::Nums2Words::num2word';
       my $ord   = 'Lingua::' . $id . '::Nums2Ords::num2ord';
       $lang->{ $id } = [ $c, $INC{ $file } ];
@@ -253,7 +254,8 @@ sub _merge_into_numbers {
       *{ $n } =   \&{ $card    } if $words && ! $c->can('num2tr');
       *{ $o } =   \&{ $ord     } if $ords  && ! $c->can('num2ord');
       *{ $v } = sub { $VERSION } if           ! $c->can('VERSION');
-      use strict;
+      *{ $f } = sub { return { words => $words, ords => $ords } };
+
       return;
    }
    $lang->{ $id } = $e; # restore

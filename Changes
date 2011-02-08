@@ -1,6 +1,7 @@
 Revision history for Perl extension Lingua::Any::Numbers.
-
-Time zone is GMT+2.
+0.41 Tue Feb  8 23:47:27 2011
+   => Fixed the faker code. Also the PT tests are skipped if one of the modules
+      is missing.
 
 0.40 Mon Oct 11 23:42:16 2010
    => Unit test fix for Lingua::SV::Numbers.

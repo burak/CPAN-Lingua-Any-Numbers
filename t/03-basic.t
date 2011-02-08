@@ -36,37 +36,46 @@ BEGIN {
 $BENCH2 = time;
 
 my %LANG = (
-   AF => { string => 'vyf en viertig'    , ordinal => '45'                    },
+   AF => { string => 'vyf en viertig'    , ordinal => TESTNUM                 },
    BG => { string => 'четиридесет и пет' , ordinal => 'четиридесет и пети'    },
-   CS => { string => 'ètyøicet pìt'      , ordinal => '45'                    },
-   DE => { string => 'fünfundvierzig'    , ordinal => '45'                    },
+   CS => { string => 'ètyøicet pìt'      , ordinal => TESTNUM                 },
+   DE => { string => 'fünfundvierzig'    , ordinal => TESTNUM                 },
    EN => { string => 'forty-five'        , ordinal => 'forty-fifth'           },
-   ES => { string => 'cuarenta y cinco'  , ordinal => 'cuadragésimo quinto' },
+   ES => { string => 'cuarenta y cinco'  , ordinal => 'cuadragésimo quinto'   },
    EU => { string => 'berrogeita bost'   , ordinal => 'berrogeita bostgarren' },
    FR => { string => 'quarante-cinq'     , ordinal => 'quarante-cinquième'    },
    HU => { string => 'negyvenöt'         , ordinal => 'negyvenötödik'         },
-   ID => { string => 'empat puluh lima ' , ordinal => '45'                    },
-   IT => { string => 'quarantacinque'    , ordinal => '45'                    },
+   ID => { string => 'empat puluh lima ' , ordinal => TESTNUM                 },
+   IT => { string => 'quarantacinque'    , ordinal => TESTNUM                 },
    JA => { string => '四十五'             , ordinal => '四十五番'                },
-   NL => { string => 'vijfenveertig'     , ordinal => '45'                    },
-   NO => { string => 'førti fem'         , ordinal => '45'                    },
-   PL => { string => 'czterdzieci piêæ ' , ordinal => '45'                    },
+   NL => { string => 'vijfenveertig'     , ordinal => TESTNUM                 },
+   NO => { string => 'førti fem'         , ordinal => TESTNUM                 },
+   PL => { string => 'czterdzieci piêæ ' , ordinal => TESTNUM                 },
    PT => { string => 'quarenta e cinco'  , ordinal => 'quadragésimo quinto'   },
    SV => { string => 'fyrtiofem'         , ordinal => 'fyrtiofemte'           },
    TR => { string => 'kırk beş'          , ordinal => 'kırk beşinci'          },
-   ZH => { string => 'SiShi Wu'          , ordinal => '45'                    },
+   ZH => { string => 'SiShi Wu'          , ordinal => TESTNUM                 },
 );
 
 my $sv = language_handler( 'SV' );
 my $fr = language_handler( 'FR' );
+my $pt = language_handler( 'PT' );
 
 if ( $sv && ! $sv->isa('Lingua::SV::Numbers') ) {
-   $LANG{SV}->{ordinal} = '45'; # Lingua::SV::Num2Word lacks this
+   $LANG{SV}->{ordinal} = TESTNUM; # Lingua::SV::Num2Word lacks this
 }
 
 if ( $fr && $fr->isa('Lingua::FR::Nums2Words') ) {
    $LANG{FR}->{string}  =~ s{\-}{ }xmsg;
-   $LANG{FR}->{ordinal} = '45'; # Lingua::FR::Nums2Words lacks this
+   $LANG{FR}->{ordinal} = TESTNUM; # Lingua::FR::Nums2Words lacks this
+}
+
+if ( $pt && $pt->can('_faked_by_lingua_any_numbers') ) {
+   # PT implements words & ords in different classes.
+   # if one of them is missing, by-pass the test
+   my $has = $pt->_faked_by_lingua_any_numbers;
+   $LANG{PT}->{string}  = TESTNUM if ! $has->{words};
+   $LANG{PT}->{ordinal} = TESTNUM if ! $has->{ords};
 }
 
 foreach my $id ( sort { $a cmp $b } available() ) {
