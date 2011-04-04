@@ -1,4 +1,11 @@
 Revision history for Perl extension Lingua::Any::Numbers.
+
+0.42 Mon Apr  4 02:44:28 2011
+   => I love when people update their code and break mine.
+         ID module fixed a ws issue after 12 years.
+         Added a detection code for that in the related test.
+         Also cleaned up the related test code a bit.
+
 0.41 Tue Feb  8 23:47:27 2011
    => Fixed the faker code. Also the PT tests are skipped if one of the modules
       is missing.

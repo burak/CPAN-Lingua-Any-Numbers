@@ -45,7 +45,7 @@ my %LANG = (
    EU => { string => 'berrogeita bost'   , ordinal => 'berrogeita bostgarren' },
    FR => { string => 'quarante-cinq'     , ordinal => 'quarante-cinquième'    },
    HU => { string => 'negyvenöt'         , ordinal => 'negyvenötödik'         },
-   ID => { string => 'empat puluh lima ' , ordinal => TESTNUM                 },
+   ID => { string => 'empat puluh lima'  , ordinal => TESTNUM                 },
    IT => { string => 'quarantacinque'    , ordinal => TESTNUM                 },
    JA => { string => '四十五'             , ordinal => '四十五番'                },
    NL => { string => 'vijfenveertig'     , ordinal => TESTNUM                 },
@@ -57,49 +57,35 @@ my %LANG = (
    ZH => { string => 'SiShi Wu'          , ordinal => TESTNUM                 },
 );
 
-my $sv = language_handler( 'SV' );
-my $fr = language_handler( 'FR' );
-my $pt = language_handler( 'PT' );
-
-if ( $sv && ! $sv->isa('Lingua::SV::Numbers') ) {
-   $LANG{SV}->{ordinal} = TESTNUM; # Lingua::SV::Num2Word lacks this
-}
-
-if ( $fr && $fr->isa('Lingua::FR::Nums2Words') ) {
-   $LANG{FR}->{string}  =~ s{\-}{ }xmsg;
-   $LANG{FR}->{ordinal} = TESTNUM; # Lingua::FR::Nums2Words lacks this
-}
-
-if ( $pt && $pt->can('_faked_by_lingua_any_numbers') ) {
-   # PT implements words & ords in different classes.
-   # if one of them is missing, by-pass the test
-   my $has = $pt->_faked_by_lingua_any_numbers;
-   $LANG{PT}->{string}  = TESTNUM if ! $has->{words};
-   $LANG{PT}->{ordinal} = TESTNUM if ! $has->{ords};
-}
-
-foreach my $id ( sort { $a cmp $b } available() ) {
-   if ( ! exists $LANG{$id} ) {
-      diag("$id seems to be loaded, but it is not supported by this test");
-      next;
-   }
-
-   my $class = language_handler( $id );
-
-   if ( ! $class ) {
-      diag("Strange. No handler for $id loaded.");
-      next;
-   }
-
-   my $v = $class->VERSION || '<undef>';
-   diag( "$class v$v loaded ok" );
-
-   run_tests( $id );
-}
+fix_test_data_for_api_inconsistencies();
+run();
 
 if ( $HIRES ) {
    diag( sprintf 'All tests took %.4f seconds to complete'   , time - $BENCH  );
    diag( sprintf 'Normal tests took %.4f seconds to complete', time - $BENCH2 );
+}
+
+sub run {
+   foreach my $id ( sort { $a cmp $b } available() ) {
+      if ( ! exists $LANG{$id} ) {
+         diag("$id seems to be loaded, but it is not supported by this test");
+         next;
+      }
+
+      my $class = language_handler( $id );
+
+      if ( ! $class ) {
+         diag("Strange. No handler for $id loaded.");
+         next;
+      }
+
+      my $v = $class->VERSION || '<undef>';
+      diag( "$class v$v loaded ok" );
+
+      run_tests( $id );
+   }
+
+   return;
 }
 
 sub is_str { return shift ne TESTNUM }
@@ -120,5 +106,46 @@ sub run_tests {
                     : cmp_ok($ordinal, q{==}, $to, qq{ORDINAL($id) ==} );
    return;
 }
+
+sub fix_test_data_for_api_inconsistencies {
+
+   my $id = language_handler( 'id' );
+   my $fr = language_handler( 'FR' );
+   my $pt = language_handler( 'PT' );
+   my $sv = language_handler( 'SV' );
+
+   if ( $id  && ! $id->isa('Lingua::SV::Numbers') ) {
+      # an update after 12 years fixed this issue in v0.02
+      my $v = Lingua::SV::Numbers->VERSION || 0;
+      if ( $v eq '0.01' ) {
+         $LANG{ID}->{string} .= q{ };
+         diag("Fixing test data for $id");
+      }
+   }
+
+   if ( $fr && $fr->isa('Lingua::FR::Nums2Words') ) {
+      diag("Fixing test data for $fr");
+      $LANG{FR}->{string}  =~ s{\-}{ }xmsg;
+      $LANG{FR}->{ordinal} = TESTNUM; # Lingua::FR::Nums2Words lacks this
+   }
+
+   if ( $pt && $pt->can('_faked_by_lingua_any_numbers') ) {
+      # PT implements words & ords in different classes.
+      # if one of them is missing, by-pass the test
+      diag("Fixing test data for $pt");
+      my $has = $pt->_faked_by_lingua_any_numbers;
+      $LANG{PT}->{string}  = TESTNUM if ! $has->{words};
+      $LANG{PT}->{ordinal} = TESTNUM if ! $has->{ords};
+   }
+
+   if ( $sv && ! $sv->isa('Lingua::SV::Numbers') ) {
+      diag("Fixing test data for $sv");
+      $LANG{SV}->{ordinal} = TESTNUM; # Lingua::SV::Num2Word lacks this
+   }
+
+   return;
+}
+
+1;
 
 __END__
