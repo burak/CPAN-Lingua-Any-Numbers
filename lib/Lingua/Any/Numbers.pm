@@ -155,12 +155,24 @@ sub _probe {
       if ( PREHISTORIC && $class->isa('Lingua::PL::Numbers') ) {
          _w("Disabling $class under legacy perl ($])") && next;
       }
-      my $ok = eval {
-         require File::Spec->catfile( split m{::}xms, $class ) . '.pm';
-         $class->import;
-         1;
-      };
-      _probe_error($@, $class) && next if $@; # some modules need attention
+
+      (my $inc = $class) =~ s{::}{/}xmsg;
+      $inc .= q{.pm};
+
+      if ( ! $INC{ $inc } ) {
+         my $file = File::Spec->catfile( split m{::}xms, $class ) . '.pm';
+         eval {
+            require $file;
+            $class->import;
+            1;
+         } or do {
+            # some modules need attention
+            _probe_error($@, $class);
+            next;
+         };
+         $INC{ $inc } = $INC{ $file };
+      }
+
       push @compile, $module;
    }
    _compile( \@compile );
