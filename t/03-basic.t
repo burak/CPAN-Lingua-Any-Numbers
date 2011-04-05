@@ -5,7 +5,8 @@ use strict;
 use warnings;
 use vars qw( $HIRES $BENCH $BENCH2 );
 use Carp qw(croak);
-use constant LEGACY_PERL => $] < 5.006;
+use constant LEGACY_PERL  => $] <  5.006;
+use constant UNICODE_PERL => $] >= 5.008;
 
 BEGIN {
    if ( LEGACY_PERL ) {
@@ -31,6 +32,13 @@ BEGIN {
    diag('Test started @ ' . scalar localtime time );
    $BENCH = time;
    use_ok( 'Lingua::Any::Numbers',':std', 'language_handler' );
+}
+
+if ( UNICODE_PERL ) {
+   eval <<'TEST_MORE_BUG' or warn "Error setting Test::More I/O layer: $@\n";
+      binmode Test::More->builder->output, ':utf8';
+      1;
+TEST_MORE_BUG
 }
 
 $BENCH2 = time;
