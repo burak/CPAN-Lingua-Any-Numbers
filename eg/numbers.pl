@@ -14,7 +14,7 @@ use Text::Table;
 use constant ISONUM  => 1..11,13..16;
 use constant TESTNUM => 45;
 
-binmode STDOUT, ':utf8';
+binmode STDOUT, ':encoding(UTF-8)';
 
 our $VERSION = '0.20';
 

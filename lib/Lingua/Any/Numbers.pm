@@ -262,7 +262,7 @@ sub _merge_into_numbers {
       my $ord   = 'Lingua::' . $id . '::Nums2Ords::num2ord';
       $lang->{ $id } = [ $c, $INC{ $file } ];
 
-      no strict qw( refs );
+      no strict qw( refs ); ## no critic (ProhibitProlongedStrictureOverride)
       *{ $n } =   \&{ $card    } if $words && ! $c->can('num2tr');
       *{ $o } =   \&{ $ord     } if $ords  && ! $c->can('num2ord');
       *{ $v } = sub { $VERSION } if           ! $c->can('VERSION');
