@@ -114,9 +114,9 @@ sub fix_test_data_for_api_inconsistencies {
    my $pt = language_handler( 'PT' );
    my $sv = language_handler( 'SV' );
 
-   if ( $id  && ! $id->isa('Lingua::SV::Numbers') ) {
+   if ( $id && $id->isa('Lingua::ID::Nums2Words') ) {
       # an update after 12 years fixed this issue in v0.02
-      my $v = Lingua::SV::Numbers->VERSION || 0;
+      my $v = $id->VERSION || 0;
       if ( $v eq '0.01' ) {
          $LANG{ID}->{string} .= q{ };
          diag("Fixing test data for $id");
