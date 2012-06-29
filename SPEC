@@ -17,4 +17,9 @@
             repository => 'http://bitbucket.org/burak/cpan-lingua-any-numbers/',
         },
     },
+    BUILDER => {
+        change_versions                  => 1,
+        copyright_first_year             => '2007',
+        add_pod_author_copyright_license => 1,
+    },
 }
