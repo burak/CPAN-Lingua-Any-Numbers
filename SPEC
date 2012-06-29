@@ -4,7 +4,6 @@
         'Lingua::EN::Numbers'    => 0,
         'I18N::LangTags::Detect' => 0,
         ( $^O =~ m{MSWin}xmsi ? ( 'Win32::Locale'    => 0 ) : ()),
-        ( $] < 5.006          ? ( 'warnings::compat' => 0 ) : ()),
     },
     build_requires => {
         'Test::More'   => '0.40',
