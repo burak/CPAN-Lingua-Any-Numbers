@@ -1,7 +1,10 @@
 Revision history for Perl extension Lingua::Any::Numbers.
 
+0.44 Sun Jul  8 01:50:04 2012
+    => Bump version.
+
 0.43 Tue Apr  5 02:03:43 2011
-   => USe the right class to fix the test.
+   => Use the right class to fix the test.
 
 0.42 Mon Apr  4 02:44:28 2011
    => I love when people update their code and break mine.
