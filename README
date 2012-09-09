@@ -5,7 +5,6 @@ Converts numbers into (any available language) string.
 
 Read the module's POD for documentation and examples.
 
-
 INSTALLATION
 
 Just use the cpan shell to install this module. From a command prompt, type:
