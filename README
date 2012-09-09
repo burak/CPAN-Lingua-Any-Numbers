@@ -5,21 +5,20 @@ Converts numbers into (any available language) string.
 
 Read the module's POD for documentation and examples.
 
+
 INSTALLATION
 
-To install this module type the following:
+Just use the cpan shell to install this module. From a command prompt, type:
 
-   perl Makefile.PL
-   make
-   make test
-   make install
+    cpan
 
-or under Windows:
+or
 
-   perl Makefile.PL
-   nmake
-   nmake test
-   nmake install
+    perl -MCPAN -e shell
+
+to enter the cpan shell. And then enter:
+
+   install Lingua::Any::Numbers
 
 DEPENDENCIES
 
@@ -30,13 +29,6 @@ RECOMMENDED MODULES
 
    Install Task::Lingua::Any::Numbers to get all available locales.
 
-COPYRIGHT
+COPYRIGHT & LICENSE
 
-Copyright (c) 2007-2010 Burak Gürsoy. All rights reserved.
-
-LICENSE
-
-This library is free software; you can redistribute it and/or modify 
-it under the same terms as Perl itself, either Perl version 5.12.1 or, 
-at your option, any later version of Perl 5 you may have available.
-
+See the LICENSE file bundled with this distribution.
