@@ -19,6 +19,9 @@ to enter the cpan shell. And then enter:
 
    install Lingua::Any::Numbers
 
+If you don't have the cpan shell available, then you have a broken perl
+installation.
+
 DEPENDENCIES
 
       Lingua::EN::Numbers
