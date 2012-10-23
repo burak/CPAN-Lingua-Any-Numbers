@@ -1,5 +1,9 @@
 Revision history for Perl extension Lingua::Any::Numbers.
 
+0.45 Wed Oct 24 01:33:26 2012
+    => Untaint sub module searches (Kevin Ryde - RT#80084).
+    => Bundle taint mode versions of tests.
+
 0.44 Sun Sep  9 03:52:37 2012
     => Fix RT#79465 (Kevin Ryde).
     => Remove legacy checks.

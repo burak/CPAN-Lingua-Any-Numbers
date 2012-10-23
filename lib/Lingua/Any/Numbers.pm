@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS );
 
-$VERSION = '0.44';
+$VERSION = '0.45';
 
 use subs qw(
    to_string
@@ -191,6 +191,7 @@ sub _probe_inc {
       opendir $DIRH, $path or croak "opendir($path): $!";
       while ( my $dir = readdir $DIRH ) {
          next if $dir =~ m{ \A [.] }xms || $NOT_LANG{ $dir };
+         ($dir) = $dir =~ m{([a-z0-9_]+)}xmsi or next; # untaint
          my @rs = _probe_exists($path, $dir);
          next if ! @rs; # bogus
          foreach my $e ( @rs ) {
