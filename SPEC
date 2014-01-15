@@ -13,7 +13,7 @@
     },
     meta_merge => {
         resources => {
-            repository => 'http://bitbucket.org/burak/cpan-lingua-any-numbers/',
+            repository => 'http://github.com/burak/cpan-lingua-any-numbers/',
         },
     },
     BUILDER => {
