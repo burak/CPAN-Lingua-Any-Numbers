@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS );
 
-$VERSION = '0.45';
+$VERSION = '0.46';
 
 use subs qw(
    to_string
