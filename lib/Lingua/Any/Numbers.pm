@@ -251,7 +251,7 @@ sub _merge_into_numbers {
       no strict qw( refs ); ## no critic (ProhibitProlongedStrictureOverride)
       *{ $n } =   \&{ $card    } if $words && ! $c->can('num2tr');
       *{ $o } =   \&{ $ord     } if $ords  && ! $c->can('num2ord');
-      *{ $v } = sub { $VERSION } if           ! $c->can('VERSION');
+      *{ $v } = sub { __PACKAGE__->VERSION } if ! $c->can('VERSION');
       *{ $f } = sub { return { words => $words, ords => $ords } };
 
       return;
