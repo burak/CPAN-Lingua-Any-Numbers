@@ -1,9 +1,7 @@
 package Lingua::Any::Numbers;
+
 use strict;
 use warnings;
-use vars qw( $VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS );
-
-$VERSION = '0.46';
 
 use subs qw(
    to_string
@@ -28,6 +26,8 @@ use constant RE_LEGACY_PERL => qr{
 use File::Spec;
 use base qw( Exporter );
 use Carp qw(croak);
+
+our(@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
 
 BEGIN {
    *num2str         = *number_to_string    = \&to_string;
