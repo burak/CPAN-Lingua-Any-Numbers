@@ -24,7 +24,7 @@ use constant RE_LEGACY_PERL => qr{
    \s+ stopped
 }xmsi;
 use File::Spec;
-use base qw( Exporter );
+use parent qw( Exporter );
 use Carp qw(croak);
 
 our(@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
